@@ -14,6 +14,62 @@ class AddGotifyTestCase(BaseTestCase):
         r = self.client.get(self.url)
         self.assertContains(r, "Gotify")
 
+    def test_down_priority_high_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority"')
+        self.assertContains(r, 'option value="9"')
+        self.assertContains(r, "High Priority: Sends a notification with sound and vibration.")
+
+    def test_down_priority_medium_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority"')
+        self.assertContains(r, 'option value="5"')
+        self.assertContains(r, "Normal Priority: Sends a notification with sound.")
+
+    def test_down_priority_low_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority"')
+        self.assertContains(r, 'option value="2"')
+        self.assertContains(r, "Low Priority: Quiet icon in notification bar.")
+
+    def test_down_priority_disabled_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority"')
+        self.assertContains(r, 'option value="0"')
+        self.assertContains(r, "Disabled: Does not notify about Down events.")
+
+    def test_up_priority_high_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority_up"')
+        self.assertContains(r, 'option value="9"')
+        self.assertContains(r, "High Priority: Sends a notification with sound and vibration.")
+
+    def test_up_priority_medium_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority_up"')
+        self.assertContains(r, 'option value="5"')
+        self.assertContains(r, "Normal Priority: Sends a notification with sound.")
+
+    def test_up_priority_low_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority_up"')
+        self.assertContains(r, 'option value="2"')
+        self.assertContains(r, "Low Priority: Quiet icon in notification bar.")
+
+    def test_up_priority_disabled_option_present(self) -> None:
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get(self.url)
+        self.assertContains(r, 'name="priority_up"')
+        self.assertContains(r, 'option value="0"')
+        self.assertContains(r, "Disabled: Does not notify about Up events.")
+
     def test_it_works(self) -> None:
         form = {
             "url": "http://example.org",
