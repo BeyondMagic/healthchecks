@@ -15,7 +15,12 @@ class AddGotifyTestCase(BaseTestCase):
         self.assertContains(r, "Gotify")
 
     def test_it_works(self) -> None:
-        form = {"url": "http://example.org", "token": "abc"}
+        form = {
+            "url": "http://example.org",
+            "token": "abc",
+            "priority": "2",
+            "priority_up": "9",
+        }
 
         self.client.login(username="alice@example.org", password="password")
         r = self.client.post(self.url, form)
@@ -25,6 +30,8 @@ class AddGotifyTestCase(BaseTestCase):
         self.assertEqual(c.kind, "gotify")
         self.assertEqual(c.gotify.url, "http://example.org")
         self.assertEqual(c.gotify.token, "abc")
+        self.assertEqual(c.gotify.priority, 2)
+        self.assertEqual(c.gotify.priority_up, 9)
         self.assertEqual(c.project, self.project)
 
     def test_it_rejects_bad_url(self) -> None:
