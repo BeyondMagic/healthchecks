@@ -980,6 +980,8 @@ class GitHubConf(BaseModel):
 class GotifyConf(BaseModel):
     url: str
     token: str
+    priority: int = Field(5, ge=0, le=9)
+    priority_up: int = Field(5, ge=0, le=9)
 
 
 class Channel(models.Model):
