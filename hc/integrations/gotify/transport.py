@@ -7,6 +7,10 @@ from hc.api.transports import HttpTransport
 
 
 class Gotify(HttpTransport):
+    def priority_for_status(self, status: str) -> int:
+        cfg = self.channel.gotify
+        return cfg.priority_up if status == "up" else cfg.priority
+
     def notify(self, flip: Flip, notification: Notification) -> None:
         base = self.channel.gotify.url
         if not base.endswith("/"):
