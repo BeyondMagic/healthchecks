@@ -157,3 +157,23 @@ class NotifyGotidyTestCase(BaseTestCase):
 
         payload = mock_post.call_args.kwargs["json"]
         self.assertNotIn("Last ping was", payload["message"])
+
+    @patch("hc.api.transports.curl.request", autospec=True)
+    def test_it_sends_high_priority_for_down(self, mock_post: Mock) -> None:
+        mock_post.return_value.status_code = 200
+        self.channel.value = json.dumps(
+            {
+                "url": "https://example.org",
+                "token": "abc",
+                "priority": 9,
+                "priority_up": 2,
+            }
+        )
+        self.channel.save()
+
+        self.channel.notify(self.flip)
+
+        self.assertEqual(Notification.objects.count(), 1)
+        payload = mock_post.call_args.kwargs["json"]
+        self.assertEqual(payload["priority"], 9)
+
