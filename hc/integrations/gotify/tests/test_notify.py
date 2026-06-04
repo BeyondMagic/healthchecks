@@ -293,6 +293,25 @@ class NotifyGotidyTestCase(BaseTestCase):
         mock_post.assert_not_called()
 
     @patch("hc.api.transports.curl.request", autospec=True)
+    def test_it_defaults_null_down_priority_to_5(self, mock_post: Mock) -> None:
+        mock_post.return_value.status_code = 200
+        self.channel.value = json.dumps(
+            {
+                "url": "https://example.org",
+                "token": "abc",
+                "priority": None,
+                "priority_up": 9,
+            }
+        )
+        self.channel.save()
+
+        self.channel.notify(self.flip)
+
+        self.assertEqual(Notification.objects.count(), 1)
+        payload = mock_post.call_args.kwargs["json"]
+        self.assertEqual(payload["priority"], 5)
+
+    @patch("hc.api.transports.curl.request", autospec=True)
     def test_it_disables_up_priority(self, mock_post: Mock) -> None:
         self.flip.new_status = "up"
         self.channel.value = json.dumps(
