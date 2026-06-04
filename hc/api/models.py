@@ -25,7 +25,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.timezone import now
 from oncalendar import OnCalendar
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from hc.accounts.models import Project
 from hc.api import transports
@@ -982,6 +982,11 @@ class GotifyConf(BaseModel):
     token: str
     priority: int = Field(5, ge=0, le=9)
     priority_up: int = Field(5, ge=0, le=9)
+
+    @field_validator("priority", "priority_up", mode="before")
+    @classmethod
+    def _default_priority(cls, v: int | None) -> int:
+        return 5 if v is None else v
 
 
 class Channel(models.Model):
