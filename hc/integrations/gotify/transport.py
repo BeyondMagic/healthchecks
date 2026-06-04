@@ -24,6 +24,7 @@ class Gotify(HttpTransport):
         payload = {
             "title": self.tmpl("gotify_title.html", **ctx),
             "message": self.tmpl("gotify_message.html", **ctx),
+            "priority": self.priority_for_status(flip.new_status),
             "extras": {
                 "client::display": {"contentType": "text/markdown"},
             },
